@@ -6,12 +6,10 @@ import (
 	"net/http"
 )
 
-// SendErrJSON 有错误发生时，发送错误JSON
-func SendErrJSON(msg string, args ...interface{}) {
-	if len(args) == 0 {
-		panic("缺少 gin.Context")
-	}
-	var c *gin.Context
+func SendErrorMsg(msg string,c *gin.Context){
 	var errNo = model.ErrorCode.ERROR
-	c.JSON(http.StatusBadRequest, gin.H{"error": errNo})
+	c.JSON(http.StatusOK, gin.H{
+		"error": errNo,
+		"msg":msg,
+	})
 }
