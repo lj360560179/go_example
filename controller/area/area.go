@@ -3,15 +3,16 @@ package area
 import (
 	"github.com/gin-gonic/gin"
 	"net/http"
+	"go_server/model"
+	"go_server/controller/common"
 )
 
 func FindAllArea(c *gin.Context){
-	type JsonHolder struct {
-		Id   int    `json:"id"`
-		Name string `json:"name"`
+	var animal model.Animal
+	if err := model.DB.First(&animal, "4").Error; err != nil {
+		common.SendErrJSON("错误的分类id", c)
+		return
 	}
-	holder := JsonHolder{Id: 1, Name: "my name"}
-	//若返回json数据，可以直接使用gin封装好的JSON方法
-	c.JSON(http.StatusOK, holder)
+	c.JSON(http.StatusOK, animal)
 	return
 }
