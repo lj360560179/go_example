@@ -3,7 +3,6 @@ package area
 import (
 	"github.com/gin-gonic/gin"
 	"go_server/model"
-
 	"go_server/controller/common"
 )
 

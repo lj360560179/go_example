@@ -8,6 +8,7 @@ import (
 	"go_server/model"
 	"github.com/gin-gonic/gin"
 	"go_server/controller/area"
+	"go_server/controller/tproduct"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
 )
 
@@ -28,5 +29,6 @@ func init() {
 func main(){
 	router := gin.Default()
 	router.GET("/area/:id",area.FindAllArea)
+	router.GET("/prodcut/:id",tproduct.FindPdtById)
 	router.Run(":8000")
 }

@@ -8,9 +8,9 @@ type Area struct {
 	AreaName        string `gorm:"column:areaName" json:"name" `
 	Levels      int `json:"levels"`
 	Pcapital    int `json:"pcapital"`
-	GovCity     int `gorm:"column:govCity" json:"govCity" `
+	GovCity     int `gorm:"column:govcity" json:"govCity" `
 	MapPoint    string `gorm:"column:column:mapPoint" json:"mapPoint" `
-	AreaFullName    string `gorm:"column:areaFullName" json:"areaFullName" `
+	AreaFullName    string `gorm:"column:areafullname" json:"areaFullName" `
 	AreaAlias		string `gorm:"column:areaAlias" json:"areaAlias" `
 	IsHot       int `gorm:"column:column:isHot" json:"isHot"`
 }
