@@ -9,11 +9,11 @@ import (
 )
 
 func FindAllArea(c *gin.Context){
-	var animal model.Animal
-	if err := model.DB.First(&animal, "1").Error; err != nil {
+	var area model.Area
+	if err := model.DB.Find(&area).Error; err != nil {
 		common.SendErrorMsg(err.Error(),c)
 		return
 	}
-	c.JSON(http.StatusOK, animal)
+	c.JSON(http.StatusOK, area)
 	return
 }

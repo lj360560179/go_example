@@ -19,6 +19,8 @@ func init() {
 	}
 	db.DB().SetMaxIdleConns(config.DBConfig.MaxIdleConns)
 	db.DB().SetMaxOpenConns(config.DBConfig.MaxOpenConns)
+	//打印SQL语句
+	db.LogMode(true)
 	model.DB = db
 }
 
