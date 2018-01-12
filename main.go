@@ -32,5 +32,6 @@ func main(){
 	router.GET("/prodcut/:id",tproduct.FindPdtById)
 	router.GET("/hotprodcuts",tproduct.FindHotPdtList)
 	router.GET("/prodcuts",tproduct.FindBySellerId)
+	router.GET("/noprodcuts",tproduct.FindNpassBySellerId)
 	router.Run(":8000")
 }
