@@ -30,6 +30,7 @@ func main(){
 	router := gin.Default()
 	router.GET("/area/:id",area.FindAllArea)
 	router.GET("/prodcut/:id",tproduct.FindPdtById)
-	router.GET("/prodcuts",tproduct.FindHotPdtList)
+	router.GET("/hotprodcuts",tproduct.FindHotPdtList)
+	router.GET("/prodcuts",tproduct.FindBySellerId)
 	router.Run(":8000")
 }
