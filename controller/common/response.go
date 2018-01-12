@@ -11,5 +11,12 @@ func SendErrorMsg(msg string,c *gin.Context){
 	c.JSON(http.StatusOK, gin.H{
 		"error": errNo,
 		"msg":msg,
+		"state":false,
+	})
+}
+func SendResponse(data interface{},c *gin.Context){
+	c.JSON(http.StatusOK, gin.H{
+		"state": true,
+		"data":data,
 	})
 }
