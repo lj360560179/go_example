@@ -1,17 +1,18 @@
 package model
 
+
 // 地区
 type Area struct {
-	AreaId      string `gorm:"primary_key" json:"areaId"`
-	ParentId  	string  `json:"parentId"`
-	Name        string  `gorm:"size:64"`
-	Levels      int
-	Pcapital    int
-	GovCity     int
-	MapPoint    string
-	AreaFullName    string  `gorm:"size:64"`
-	AreaAlias		string  `gorm:"size:64"`
-	IsHot       int
+	AreaId      string `gorm:"column:areaId" json:"areaId" `
+	ParentId  	string `gorm:"column:parentId" json:"parentId" `
+	AreaName        string `gorm:"column:areaName" json:"name" `
+	Levels      int `json:"levels"`
+	Pcapital    int `json:"pcapital"`
+	GovCity     int `gorm:"column:govCity" json:"govCity" `
+	MapPoint    string `gorm:"column:column:mapPoint" json:"mapPoint" `
+	AreaFullName    string `gorm:"column:areaFullName" json:"areaFullName" `
+	AreaAlias		string `gorm:"column:areaAlias" json:"areaAlias" `
+	IsHot       int `gorm:"column:column:isHot" json:"isHot"`
 }
 func (Area) TableName() string {
 	return "tsys_area"

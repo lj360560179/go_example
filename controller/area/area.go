@@ -9,8 +9,8 @@ import (
 )
 
 func FindAllArea(c *gin.Context){
-	var area model.Area
-	if err := model.DB.Find(&area).Error; err != nil {
+	var area []model.Area
+	if err := model.DB.Where("levels = ?", "1").Find(&area).Error; err != nil {
 		common.SendErrorMsg(err.Error(),c)
 		return
 	}
