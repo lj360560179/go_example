@@ -18,7 +18,7 @@ func FindPdtById(c *gin.Context){
 
 func FindHotPdtList(c *gin.Context){
 	var pdt []model.TProduct
-	if err := model.DB.Where(map[string]interface{}{"isDelete": "FALSE", "sellerId": c.Query("id"),"status":"ON_SALE","checkStatus":"CHECKSUCCESS"}).Find(&pdt).Error; err != nil {
+	if err := model.DB.Limit(5).Where(map[string]interface{}{"isDelete": "FALSE", "sellerId": c.Query("id"),"status":"ON_SALE","checkStatus":"CHECKSUCCESS"}).Order("updateTime desc").Find(&pdt).Error; err != nil {
 		common.SendErrorMsg(err.Error(),c)
 		return
 	}
