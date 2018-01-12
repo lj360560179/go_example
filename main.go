@@ -27,6 +27,6 @@ func init() {
 
 func main(){
 	router := gin.Default()
-	router.GET("/area",area.FindAllArea)
+	router.GET("/area/:id",area.FindAllArea)
 	router.Run(":8000")
 }
