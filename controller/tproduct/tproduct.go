@@ -44,6 +44,7 @@ func FindNpassBySellerId(c *gin.Context){
 		return
 	}
 	for _ ,pdtitem := range pdt{
+
 		fmt.Println(pdtitem.Guid)
 	}
 	common.SendResponse(pdt,c)
