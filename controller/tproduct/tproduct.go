@@ -43,10 +43,13 @@ func FindNpassBySellerId(c *gin.Context){
 		common.SendErrorMsg(err.Error(),c)
 		return
 	}
+	var resultList []interface{};
 	for _ ,pdtitem := range pdt{
-
-		fmt.Println(pdtitem.Guid)
+		resultmap := make(map[string]interface{})
+		resultmap["pdtName"] = pdtitem.Title
+		resultList = append(resultList, resultmap)
 	}
-	common.SendResponse(pdt,c)
+
+	common.SendResponse(resultList,c)
 	return
 }
