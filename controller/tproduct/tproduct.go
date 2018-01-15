@@ -4,7 +4,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"go_server/model"
 	"go_server/controller/common"
-	"fmt"
+
 )
 
 func FindPdtById(c *gin.Context){
@@ -43,13 +43,17 @@ func FindNpassBySellerId(c *gin.Context){
 		common.SendErrorMsg(err.Error(),c)
 		return
 	}
-	var resultList []interface{};
+	var resultList []interface{}
 	for _ ,pdtitem := range pdt{
+		var pdtAmsg model.TProductAuth
 		resultmap := make(map[string]interface{})
 		resultmap["pdtName"] = pdtitem.Title
+		resultmap["pdtCheckstatus"] = pdtitem.Checkstatus
+		if err := model.DB.Limit(1).Where(map[string]interface{}{"pId": pdtitem.Guid}).Order("checkTime desc").Find(&pdtAmsg).Error; err != nil {
+			resultmap["noPassMsg"] = pdtAmsg.Checkinfo
+		}
 		resultList = append(resultList, resultmap)
 	}
-
 	common.SendResponse(resultList,c)
 	return
 }
