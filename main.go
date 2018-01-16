@@ -9,6 +9,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"go_server/controller/area"
 	"go_server/controller/tproduct"
+	"go_server/controller/es"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
 )
 
@@ -33,5 +34,7 @@ func main(){
 	router.GET("/hotprodcuts",tproduct.FindHotPdtList)
 	router.GET("/prodcuts",tproduct.FindBySellerId)
 	router.GET("/noprodcuts",tproduct.FindNpassBySellerId)
+	router.GET("/esindex",es.EsIndex)
+	router.GET("/esserch",es.SerchEs)
 	router.Run(":8000")
 }
