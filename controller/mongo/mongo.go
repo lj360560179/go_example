@@ -1,6 +1,7 @@
 package mongo
 
+import "github.com/gin-gonic/gin"
 
-func GetByMo(){
+func GetByMo(c *gin.Context){
 
 }
