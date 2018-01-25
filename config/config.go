@@ -71,9 +71,24 @@ func initRedis() {
 	RedisConfig.URL = url
 }
 
+type mongoConfig struct {
+	Host string
+	Port int
+	URL       string
+}
+
+var MongoConfig mongoConfig
+
+func initMongo(){
+	utils.SetStructByJSON(&MongoConfig, jsonData["mongodb"].(map[string]interface{}))
+	url := fmt.Sprintf("%s:%d",MongoConfig.Host,MongoConfig.Port)
+	MongoConfig.URL = url
+}
+
 func init() {
 	initJSON()
 	initDB()
 	initRedis()
+	initMongo()
 }
 

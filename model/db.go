@@ -48,7 +48,7 @@ func initRedis() {
 }
 
 func initMongo() {
-	session, err := mgo.Dial("192.168.99.100:27017")
+	session, err := mgo.Dial(config.MongoConfig.URL)
 	if err != nil {
 		fmt.Println(err.Error())
 		os.Exit(-1)
