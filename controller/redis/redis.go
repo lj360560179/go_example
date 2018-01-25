@@ -10,8 +10,7 @@ import (
 func GetRedis(c *gin.Context){
 	RedisConn := model.RedisPool.Get()
 	defer RedisConn.Close()
-	RedisConn.Send("SET", "foo", "bar")
-	RedisConn.Flush()
+	RedisConn.Do("SET", "foo", "bar")
 	minuteCount, err := redis.String(RedisConn.Do("GET", "foo"))
 	if err != nil {
 		common.SendErrorMsg(err.Error(),c)
