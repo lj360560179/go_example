@@ -10,6 +10,12 @@
 		"MaxIdleConns" : 5,          /*空闲时最大的连接数*/
 		"MaxOpenConns" : 10          /*最大的连接数*/
 	},
+	"redis": {
+		"Host"      : "127.0.0.1",/*redis所在机器的ip*/
+		"Port"      : 6379,       /*redis的端口*/
+		"MaxIdle"   : 3,          /*最大的空闲连接数*/
+		"MaxActive" : 5           /*最大的激活连接数*/
+	},
 	"mongodb": {
 		"Host"         : "192.168.99.100",/*数据库ip*/
 		"Port"         : 27017       /*数据库端口*/

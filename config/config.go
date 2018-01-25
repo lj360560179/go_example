@@ -46,14 +46,34 @@ type dBConfig struct {
 // DBConfig 数据库相关配置
 var DBConfig dBConfig
 
+
 func initDB() {
 	utils.SetStructByJSON(&DBConfig, jsonData["database"].(map[string]interface{}))
 	url := fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?charset=%s&parseTime=True&loc=Local",
 		DBConfig.User, DBConfig.Password, DBConfig.Host, DBConfig.Port, DBConfig.Database, DBConfig.Charset)
 	DBConfig.URL = url
 }
+
+type redisConfig struct {
+	Host      string
+	Port      int
+	URL       string
+	MaxIdle   int
+	MaxActive int
+}
+
+// RedisConfig redis相关配置
+var RedisConfig redisConfig
+
+func initRedis() {
+	utils.SetStructByJSON(&RedisConfig, jsonData["redis"].(map[string]interface{}))
+	url := fmt.Sprintf("%s:%d", RedisConfig.Host, RedisConfig.Port)
+	RedisConfig.URL = url
+}
+
 func init() {
 	initJSON()
 	initDB()
+	initRedis()
 }
 
