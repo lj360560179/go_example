@@ -10,6 +10,7 @@ import (
 	"go_server/controller/area"
 	"go_server/controller/tproduct"
 	"go_server/controller/es"
+	"go_server/controller/mongo"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
 )
 
@@ -36,5 +37,6 @@ func main(){
 	router.GET("/noprodcuts",tproduct.FindNpassBySellerId)
 	router.GET("/esindex",es.EsIndex)
 	router.GET("/esserch",es.SerchEs)
+	router.GET("/mongo",mongo.GetByMo)
 	router.Run(":8000")
 }

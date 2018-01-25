@@ -31,7 +31,7 @@ func GetByMo(c *gin.Context){
 	}
 
 	result := Person{}
-	err = a.Find(bson.M{"name": "Ale"}).One(&result)
+	err = a.Find(bson.M{"name": "Cla"}).One(&result)
 	if err != nil {
 		log.Fatal(err)
 	}
