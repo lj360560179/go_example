@@ -19,7 +19,7 @@ func GetByMo(c *gin.Context){
 	err := a.Find(bson.M{"name": "Cla"}).One(&result)
 	if err != nil {
 		log.Fatal(err)
-		common.SendErrorMsg("mmp",c)
+		common.SendErrorMsg("mmpp",c)
 	}
 	common.SendResponse(result,c)
 	return
