@@ -6,6 +6,7 @@ import (
 	"go_server/controller/tproduct"
 	"go_server/controller/es"
 	"go_server/controller/mongo"
+	"go_server/controller/redis"
 
 )
 
@@ -22,5 +23,6 @@ func main(){
 	router.GET("/esindex",es.EsIndex)
 	router.GET("/esserch",es.SerchEs)
 	router.GET("/mongo",mongo.GetByMo)
+	router.GET("/redis",redis.GetRedis)
 	router.Run(":8000")
 }
