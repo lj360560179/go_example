@@ -5,6 +5,7 @@ import (
 	"gopkg.in/mgo.v2/bson"
 	"go_server/model"
 	"go_server/controller/common"
+	"log"
 )
 
 type Person struct{
@@ -15,7 +16,11 @@ type Person struct{
 func GetByMo(c *gin.Context){
 	a := model.MongoDB.DB("test").C("people")
 	result := Person{}
-	a.Find(bson.M{"name": "Cla"}).One(&result)
+	err := a.Find(bson.M{"name": "Cla"}).One(&result)
+	if err != nil {
+		log.Fatal(err)
+		common.SendErrorMsg("mmp",c)
+	}
 	common.SendResponse(result,c)
 	return
 }
