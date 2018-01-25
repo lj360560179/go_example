@@ -8,4 +8,4 @@ import (
 // DB 数据库连接
 var DB *gorm.DB
 
-var mongoDB *mgo.Database
+var MongoDB *mgo.Session
