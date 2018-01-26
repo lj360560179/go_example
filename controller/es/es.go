@@ -9,6 +9,7 @@ import (
 	"context"
 	"net/http"
 	"strconv"
+	"fmt"
 )
 
 func EsIndex(c *gin.Context){
@@ -51,6 +52,7 @@ func EsIndexArea(c *gin.Context){
 		return
 	}
 	for i ,areaitem := range areas{
+		fmt.Println(i)
 		_, err := client.Index().Index("area").Type("doc").Id(strconv.Itoa(i)).BodyJson(areaitem).Do(context.Background())
 		if err != nil {
 			// Handle error
