@@ -38,6 +38,35 @@ func EsIndex(c *gin.Context){
 	})
 	return
 }
+
+func EsIndexArea(c *gin.Context){
+	client, err := elastic.NewClient()
+	if err != nil {
+		common.SendErrorMsg(err.Error(),c)
+		return
+	}
+	var areas []model.Area
+	if err := model.DB.Find(&areas).Error; err != nil {
+		common.SendErrorMsg(err.Error(),c)
+		return
+	}
+	for i ,areaitem := range areas{
+		_, err := client.Index().Index("area").Type("doc").Id(strconv.Itoa(i)).BodyJson(areaitem).Do(context.Background())
+		if err != nil {
+			// Handle error
+			panic(err)
+		}
+	}
+	_, err = client.Flush().Index("area").Do(context.Background())
+	if err != nil {
+		panic(err)
+	}
+	c.JSON(http.StatusOK, gin.H{
+		"state": true,
+	})
+	return
+}
+
 func SerchEs(c *gin.Context){
 	client, err := elastic.NewClient()
 	if err != nil {

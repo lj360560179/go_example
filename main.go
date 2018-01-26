@@ -10,9 +10,6 @@ import (
 
 )
 
-
-
-
 func main(){
 	router := gin.Default()
 	router.GET("/area/:id",area.FindAllArea)
@@ -21,6 +18,7 @@ func main(){
 	router.GET("/prodcuts",tproduct.FindBySellerId)
 	router.GET("/noprodcuts",tproduct.FindNpassBySellerId)
 	router.GET("/esindex",es.EsIndex)
+	router.GET("/esindexarea",es.EsIndexArea)
 	router.GET("/esserch",es.SerchEs)
 	router.GET("/mongo",mongo.GetByMo)
 	router.GET("/redis",redis.GetRedis)
