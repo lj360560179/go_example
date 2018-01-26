@@ -82,3 +82,17 @@ func SerchEs(c *gin.Context){
 	common.SendResponse(searchResult,c)
 }
 
+func SerchArea(c *gin.Context){
+	client, err := elastic.NewClient()
+	if err != nil {
+		common.SendErrorMsg(err.Error(),c)
+		return
+	}
+	termQuery := elastic.NewTermQuery("areaName", c.Query("name"))
+	searchResult, err := client.Search().Index("area").Query(termQuery).From(0).Size(10).Pretty(true).Do(context.Background())
+	if err != nil {
+		// Handle error
+		panic(err)
+	}
+	common.SendResponse(searchResult,c)
+}
