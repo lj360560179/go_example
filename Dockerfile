@@ -5,3 +5,4 @@ RUN go get github.com/gin-gonic/gin \
     go get gopkg.in/mgo.v2/bson
 #开放端口
 EXPOSE 7070
+CMD
