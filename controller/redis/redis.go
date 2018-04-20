@@ -39,7 +39,7 @@ func setString(key,value string) bool {
 func setStringTime(key,value string, timeOutSeconds int ) bool{
 	RedisConn := model.RedisPool.Get()
 	defer RedisConn.Close()
-	result ,err := RedisConn.Do("SETEX",timeOutSeconds, key, value)
+	result ,err := RedisConn.Do("SETEX",key, timeOutSeconds, value)
 	if err != nil {
 		fmt.Println(err)
 	}
