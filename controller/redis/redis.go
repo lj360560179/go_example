@@ -5,18 +5,43 @@ import (
 	"go_server/model"
 	"go_server/controller/common"
 	"github.com/garyburd/redigo/redis"
+	"fmt"
 )
 
 func GetRedis(c *gin.Context){
-	RedisConn := model.RedisPool.Get()
-	defer RedisConn.Close()
-	RedisConn.Do("SET", "foo", "bar")
-	foo, err := redis.String(RedisConn.Do("GET", "foo"))
-	if err != nil {
-		common.SendErrorMsg(err.Error(),c)
-		return
-	}
-	common.SendResponse(foo,c)
+    result := getString(c.Query("key"))
+	common.SendResponse(result,c)
 	return
 }
 
+func SetRedis(c *gin.Context){
+	key := c.Query("key")
+	value := c.Query("value")
+	common.SendResponse(setString(key,value),c)
+	return
+}
+
+/**
+	缓存String
+ */
+func setString(key,value string) bool {
+	RedisConn := model.RedisPool.Get()
+	defer RedisConn.Close()
+	result ,err := RedisConn.Do("SET", key, value)
+	if err != nil {
+		fmt.Println(err)
+	}
+	return result == "OK"
+}
+/**
+     从缓存中获取String
+ */
+func getString(key string) string {
+	RedisConn := model.RedisPool.Get()
+	defer RedisConn.Close()
+	result, err := redis.String(RedisConn.Do("GET", key))
+	if err != nil {
+		fmt.Println(err)
+	}
+	return result
+}
