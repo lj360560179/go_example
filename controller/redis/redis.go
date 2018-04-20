@@ -19,3 +19,4 @@ func GetRedis(c *gin.Context){
 	common.SendResponse(foo,c)
 	return
 }
+

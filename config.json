@@ -1,23 +1,12 @@
 {
-	"database": {
-		"Dialect"      : "mysql",
-		"Database"     : "lj_db",
-		"User"	       : "root",
-		"Password"     : "123456",
-		"Charset"      : "utf8mb4",  /*要支持emoji的话，填 utf8mb4 */
-		"Host"         : "192.168.99.100",/*数据库ip*/
-		"Port"         : 3306,       /*数据库端口*/
-		"MaxIdleConns" : 5,          /*空闲时最大的连接数*/
-		"MaxOpenConns" : 10          /*最大的连接数*/
-	},
 	"redis": {
-		"Host"      : "192.168.99.100",/*redis所在机器的ip*/
+		"Host"      : "172.16.1.113",/*redis所在机器的ip*/
 		"Port"      : 6379,       /*redis的端口*/
 		"MaxIdle"   : 3,          /*最大的空闲连接数*/
 		"MaxActive" : 5           /*最大的激活连接数*/
 	},
 	"mongodb": {
-		"Host"         : "192.168.99.100",/*数据库ip*/
+		"Host"         : "172.16.1.113",/*数据库ip*/
 		"Port"         : 27017       /*数据库端口*/
 	}
 }
