@@ -12,5 +12,6 @@ func main(){
 	router.GET("/getString",redis.GetRedis)
 	router.GET("/mongo",mongo.GetByMo)
 	router.GET("/setString",redis.SetRedis)
+	router.GET("/zetTest",redis.ZetTest)
 	router.Run(":8000")
 }
