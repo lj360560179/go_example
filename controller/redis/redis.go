@@ -37,3 +37,6 @@ func ZetTest(c *gin.Context)  {
 	common.SendResponse(result,c)
 }
 
+func AddToList()  {
+	
+}
