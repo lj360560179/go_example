@@ -40,3 +40,8 @@ func ZetTest(c *gin.Context)  {
 func AddToList()  {
 	
 }
+
+//todo
+func job()  {
+	
+}
