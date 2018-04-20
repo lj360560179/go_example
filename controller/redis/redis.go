@@ -28,7 +28,13 @@ func ZetTest(c *gin.Context)  {
 	v := c.Query("v")
 	s,_ := strconv.ParseInt(c.Query("s"),10,32)
 	addZet(k,v,int32(s))
-	common.SendResponse(getSoredSetByRange(k,0,10,true),c)
+	zset := getSoredSetByRange(k,0,10,true)
+
+	result := make(map[string]int64)
+	for _, set := range zset {
+		result[set] = zetScore(k,set)
+		}
+	common.SendResponse(result,c)
 }
 
 /**
@@ -124,7 +130,7 @@ func remZet(key string) bool {
 	return result == 1
 }
 
-func getSoredSetByRange(key string,startRange,endRange int ,orderByDesc bool) []string {
+func getSoredSetByRange(key string,startRange,endRange int ,orderByDesc bool) [] string {
 	RedisConn := model.RedisPool.Get()
 	defer RedisConn.Close()
 	fing := "ZRANGE"
@@ -132,6 +138,16 @@ func getSoredSetByRange(key string,startRange,endRange int ,orderByDesc bool) []
 		fing = "ZREVRANGE"
 	}
 	result ,err :=  redis.Strings(RedisConn.Do(fing, key,startRange,endRange))
+	if err != nil {
+		fmt.Println(err)
+	}
+	return result
+}
+
+func zetScore(key,value string) int64  {
+	RedisConn := model.RedisPool.Get()
+	defer RedisConn.Close()
+	result ,err :=  redis.Int64(RedisConn.Do("ZSCORE", key,value))
 	if err != nil {
 		fmt.Println(err)
 	}
