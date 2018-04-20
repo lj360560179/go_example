@@ -10,7 +10,6 @@ import (
 
 func main(){
 	router := gin.Default()
-	router.GET("/esserch",es.SerchEs)
 	router.GET("/mongo",mongo.GetByMo)
 	router.GET("/redis",redis.GetRedis)
 	router.Run(":8000")
