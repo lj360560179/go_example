@@ -17,7 +17,7 @@ func GetRedis(c *gin.Context){
 func SetRedis(c *gin.Context){
 	key := c.Query("key")
 	value := c.Query("value")
-	common.SendResponse(setString(key,value),c)
+	common.SendResponse(setStringTime(key,value,10),c)
 	return
 }
 
@@ -33,6 +33,19 @@ func setString(key,value string) bool {
 	}
 	return result == "OK"
 }
+/**
+	缓存String 设置过期时间
+ */
+func setStringTime(key,value string, timeOutSeconds int ) bool{
+	RedisConn := model.RedisPool.Get()
+	defer RedisConn.Close()
+	result ,err := RedisConn.Do("SETEX",timeOutSeconds, key, value)
+	if err != nil {
+		fmt.Println(err)
+	}
+	return result == "OK"
+}
+
 /**
      从缓存中获取String
  */
