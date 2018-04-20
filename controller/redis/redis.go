@@ -10,6 +10,8 @@ import (
 	"strconv"
 )
 
+
+
 func GetRedis(c *gin.Context){
     result := getString(c.Query("key"))
 	common.SendResponse(result,c)
@@ -33,7 +35,7 @@ func ZetTest(c *gin.Context)  {
 	result := make(map[string]int64)
 	for _, set := range zset {
 		result[set] = zetScore(k,set)
-		}
+	}
 	common.SendResponse(result,c)
 }
 
@@ -144,10 +146,28 @@ func getSoredSetByRange(key string,startRange,endRange int ,orderByDesc bool) []
 	return result
 }
 
+
+
+/**
+	获取分数
+ */
 func zetScore(key,value string) int64  {
 	RedisConn := model.RedisPool.Get()
 	defer RedisConn.Close()
 	result ,err :=  redis.Int64(RedisConn.Do("ZSCORE", key,value))
+	if err != nil {
+		fmt.Println(err)
+	}
+	return result
+}
+
+/**
+	获取列表长度
+ */
+func countList(key string) int {
+	RedisConn := model.RedisPool.Get()
+	defer RedisConn.Close()
+	result ,err :=  redis.Int(RedisConn.Do("LLEN", key))
 	if err != nil {
 		fmt.Println(err)
 	}
