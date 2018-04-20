@@ -173,3 +173,40 @@ func countList(key string) int {
 	}
 	return result
 }
+/**
+	添加元素到list（使用右进）
+ */
+func insertList(key string, value... string) bool {
+	RedisConn := model.RedisPool.Get()
+	defer RedisConn.Close()
+	err := RedisConn.Send("RPUSH", key,value)
+	if err != nil {
+		fmt.Println(err)
+		return false
+	}
+	return true
+}
+/**
+	获取list
+ */
+func rangeList(key string, start,end int) []string {
+	RedisConn := model.RedisPool.Get()
+	defer RedisConn.Close()
+	result ,err := redis.Strings(RedisConn.Do("LRANGE", start,end))
+	if err != nil {
+		fmt.Println(err)
+	}
+	return result
+}
+/**
+ 	删除LIST数据
+ */
+func remListValue(key,value string ,count int) bool {
+	RedisConn := model.RedisPool.Get()
+	defer RedisConn.Close()
+	result ,err := redis.Int(RedisConn.Do("LREM", key,count,value))
+	if err != nil {
+		fmt.Println(err)
+	}
+	return result > 0
+}
