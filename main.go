@@ -4,7 +4,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"go_server/controller/mongo"
 	"go_server/controller/redis"
-
+	"go_server/job"
 )
 
 func main(){
@@ -14,4 +14,9 @@ func main(){
 	router.GET("/setString",redis.SetRedis)
 	router.GET("/zetTest",redis.ZetTest)
 	router.Run(":8000")
+
+	//定时任务
+	job.RedisJob()
+
 }
+
