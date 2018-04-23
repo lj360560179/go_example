@@ -3,7 +3,8 @@ package job
 import (
 	"github.com/robfig/cron"
 	"log"
-	)
+	"fmt"
+)
 
 
 func RedisJob()  {
@@ -13,7 +14,7 @@ func RedisJob()  {
 	spec := "*/5 * * * * ?"
 	c.AddFunc(spec, func() {
 		i++
-		log.Println("cron running:", i)
+		fmt.Println("cron running:", i)
 	})
 	c.AddFunc("@every 1h1m", func() {
 		i++

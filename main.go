@@ -15,8 +15,6 @@ func main(){
 	router.GET("/zetTest",redis.ZetTest)
 	router.Run(":8000")
 
-	//定时任务
-	job.RedisJob()
-
+	job.RedisJob();
 }
 
