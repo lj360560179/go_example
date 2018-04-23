@@ -9,6 +9,7 @@ import (
 	"time"
 	"go_server/config"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
+	"go_server/job"
 )
 
 // DB 数据库连接
@@ -62,4 +63,5 @@ func init() {
 	initMongo()
 	//initDB()
 	initRedis()
+	job.RedisJob()
 }
