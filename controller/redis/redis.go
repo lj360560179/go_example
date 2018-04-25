@@ -14,18 +14,18 @@ func ZetTest(c *gin.Context)  {
 	k := c.Query("k")
 	v := c.Query("v")
 	s,_ := strconv.ParseInt(c.Query("s"),10,32)
-	AddZet(k,v,int32(s))
-	zset :=GetSoredSetByRange(k,0,10,true)
+	addZet(k,v,int32(s))
+	zset :=getSoredSetByRange(k,0,10,true)
 
 	result := make(map[string]int64)
 	for _, set := range zset {
-		result[set] = ZetScore(k,set)
+		result[set] = zetScore(k,set)
 	}
 	common.SendResponse(result,c)
 }
 
 func GetRedis(c *gin.Context){
-    result := GetString(c.Query("key"))
+    result := getString(c.Query("key"))
 	common.SendResponse(result,c)
 	return
 }
@@ -33,14 +33,14 @@ func GetRedis(c *gin.Context){
 func SetRedis(c *gin.Context){
 	k := c.Query("k")
 	v := c.Query("v")
-	common.SendResponse(SetStringTime(k,v,10),c)
+	common.SendResponse(setStringTime(k,v,10),c)
 	return
 }
 
 /**
 	缓存String
  */
-func SetString(key,value string) bool {
+func setString(key,value string) bool {
 	RedisConn := model.RedisPool.Get()
 	defer RedisConn.Close()
 	result ,err := RedisConn.Do("SET", key, value)
@@ -52,7 +52,7 @@ func SetString(key,value string) bool {
 /**
 	缓存String 设置过期时间
  */
-func SetStringTime(key,value string, timeOutSeconds int ) bool{
+func setStringTime(key,value string, timeOutSeconds int ) bool{
 	RedisConn := model.RedisPool.Get()
 	defer RedisConn.Close()
 	result ,err := RedisConn.Do("SETEX",key, timeOutSeconds, value)
@@ -65,7 +65,7 @@ func SetStringTime(key,value string, timeOutSeconds int ) bool{
 /**
      从缓存中获取String
  */
-func GetString(key string) string {
+func getString(key string) string {
 	RedisConn := model.RedisPool.Get()
 	defer RedisConn.Close()
 	result, err := redis.String(RedisConn.Do("GET", key))
@@ -78,7 +78,7 @@ func GetString(key string) string {
 /**
 	删除
  */
-func RemoceString(key string) bool{
+func remoceString(key string) bool{
 	RedisConn := model.RedisPool.Get()
 	defer RedisConn.Close()
 	result, err := RedisConn.Do("DEL", key)
@@ -91,7 +91,7 @@ func RemoceString(key string) bool{
 /**
  	存对象
  */
-func SetObj(key string,obj interface{}) bool {
+func setObj(key string,obj interface{}) bool {
 	RedisConn := model.RedisPool.Get()
 	defer RedisConn.Close()
 	value, err := json.Marshal(obj)
@@ -108,7 +108,7 @@ func SetObj(key string,obj interface{}) bool {
 /**
 	向有序列表存入
  */
-func AddZet(key ,value string ,score int32) bool {
+func addZet(key ,value string ,score int32) bool {
 	RedisConn := model.RedisPool.Get()
 	defer RedisConn.Close()
 	result ,err := RedisConn.Do("ZADD", key, score,value)
@@ -120,7 +120,7 @@ func AddZet(key ,value string ,score int32) bool {
 /**
 	删除有序列表元素
  */
-func RemZet(key string) bool {
+func remZet(key string) bool {
 	RedisConn := model.RedisPool.Get()
 	defer RedisConn.Close()
 	result ,err := RedisConn.Do("ZREM", key)
@@ -130,7 +130,7 @@ func RemZet(key string) bool {
 	return result == 1
 }
 
-func GetSoredSetByRange(key string,startRange,endRange int ,orderByDesc bool) [] string {
+func getSoredSetByRange(key string,startRange,endRange int ,orderByDesc bool) [] string {
 	RedisConn := model.RedisPool.Get()
 	defer RedisConn.Close()
 	fing := "ZRANGE"
@@ -149,7 +149,7 @@ func GetSoredSetByRange(key string,startRange,endRange int ,orderByDesc bool) []
 /**
 	获取分数
  */
-func ZetScore(key,value string) int64  {
+func zetScore(key,value string) int64  {
 	RedisConn := model.RedisPool.Get()
 	defer RedisConn.Close()
 	result ,err :=  redis.Int64(RedisConn.Do("ZSCORE", key,value))
@@ -162,7 +162,7 @@ func ZetScore(key,value string) int64  {
 /**
 	获取列表长度
  */
-func CountList(key string) int {
+func countList(key string) int {
 	RedisConn := model.RedisPool.Get()
 	defer RedisConn.Close()
 	result ,err :=  redis.Int(RedisConn.Do("LLEN", key))
@@ -174,7 +174,7 @@ func CountList(key string) int {
 /**
 	添加元素到list（使用右进）
  */
-func InsertList(key string, value... string) bool {
+func insertList(key string, value... string) bool {
 	RedisConn := model.RedisPool.Get()
 	defer RedisConn.Close()
 	err := RedisConn.Send("RPUSH", key,value)
@@ -187,7 +187,7 @@ func InsertList(key string, value... string) bool {
 /**
 	获取list
  */
-func RangeList(key string, start,end int) []string {
+func rangeList(key string, start,end int) []string {
 	RedisConn := model.RedisPool.Get()
 	defer RedisConn.Close()
 	result ,err := redis.Strings(RedisConn.Do("LRANGE", start,end))
@@ -199,7 +199,7 @@ func RangeList(key string, start,end int) []string {
 /**
  	删除LIST数据
  */
-func RemListValue(key,value string ,count int) bool {
+func remListValue(key,value string ,count int) bool {
 	RedisConn := model.RedisPool.Get()
 	defer RedisConn.Close()
 	result ,err := redis.Int(RedisConn.Do("LREM", key,count,value))
