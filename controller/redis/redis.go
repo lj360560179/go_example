@@ -8,7 +8,29 @@ import (
 	"fmt"
 	"encoding/json"
 	"go_server/model"
+	"time"
+	"github.com/satori/go.uuid"
 )
+
+type Msg struct {
+	id string
+	msg string
+}
+
+func AddRedisMq(c *gin.Context)  {
+	v := c.Query("v")
+	RedisConn := model.RedisPool.Get()
+	defer RedisConn.Close()
+	value, err := json.Marshal( Msg{"uuid", v})
+	if  err != nil {
+		fmt.Println(err)
+	}
+	result ,err := RedisConn.Do("SETEX",uuid.NamespaceDNS, 60*60*24*time.Second, value)
+	if err != nil {
+		fmt.Println(err)
+	}
+	common.SendResponse(result,c)
+}
 
 func ZetTest(c *gin.Context)  {
 	k := c.Query("k")
