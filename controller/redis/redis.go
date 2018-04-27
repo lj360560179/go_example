@@ -23,28 +23,28 @@ func AddRedisMq(c *gin.Context)  {
 	RedisConn := model.RedisPool.Get()
 	defer RedisConn.Close()
 	value, err := json.Marshal( Msg{"uuid", v})
+
+	fmt.Println(value)
 	if  err != nil {
-		fmt.Println(err)
+		common.SendErrorMsg("json!!!",c)
 	}
 	uid :=uuid.NamespaceDNS.String()
-	result ,err := RedisConn.Do("SETEX",uuid.NamespaceDNS, 60*60*24*time.Second, value)
+	result ,err := RedisConn.Do("SETEX",uid, int(60*time.Second),string(value))
 	if err != nil {
 		fmt.Println(err)
+		common.SendErrorMsg("没存进去obj!!!",c)
 	}
-	addZet("ZSET",uid,int32(s))
+	if addZet("ZSET",uid,int32(s)) {
+		common.SendErrorMsg("出错了呢~",c)
+	}
 	common.SendResponse(result,c)
 }
 
-func ZetTest(c *gin.Context)  {
-	k := c.Query("k")
-	v := c.Query("v")
-	s,_ := strconv.ParseInt(c.Query("s"),10,32)
-	addZet(k,v,int32(s))
-	zset :=getSoredSetByRange(k,0,10,true)
-
+func GetZset(c *gin.Context)  {
+	zset :=getSoredSetByRange("ZSET",0,10,true)
 	result := make(map[string]int64)
 	for _, set := range zset {
-		result[set] = zetScore(k,set)
+		result[set] = zetScore("ZSET",set)
 	}
 	common.SendResponse(result,c)
 }
