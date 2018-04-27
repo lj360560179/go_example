@@ -19,16 +19,19 @@ type Msg struct {
 
 func AddRedisMq(c *gin.Context)  {
 	v := c.Query("v")
+	s,_ := strconv.ParseInt(c.Query("s"),10,32)
 	RedisConn := model.RedisPool.Get()
 	defer RedisConn.Close()
 	value, err := json.Marshal( Msg{"uuid", v})
 	if  err != nil {
 		fmt.Println(err)
 	}
+	uid :=uuid.NamespaceDNS.String()
 	result ,err := RedisConn.Do("SETEX",uuid.NamespaceDNS, 60*60*24*time.Second, value)
 	if err != nil {
 		fmt.Println(err)
 	}
+	addZet("ZSET",uid,int32(s))
 	common.SendResponse(result,c)
 }
 
