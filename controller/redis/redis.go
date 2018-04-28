@@ -3,7 +3,6 @@ package redis
 import (
 	"github.com/gin-gonic/gin"
 	"go_server/controller/common"
-	"strconv"
 	"github.com/garyburd/redigo/redis"
 	"fmt"
 	"encoding/json"
@@ -21,12 +20,12 @@ type Msg struct {
 
 func AddRedisMq(c *gin.Context)  {
 	v := c.Query("v")
-	s,_ := strconv.ParseInt(c.Query("s"),10,32)
+
 	RedisConn := model.RedisPool.Get()
 	defer RedisConn.Close()
 	value, err := json.Marshal( Msg{"uuid", v})
-
 	fmt.Println(value)
+
 	if  err != nil {
 		common.SendErrorMsg("json!!!",c)
 	}
@@ -36,7 +35,9 @@ func AddRedisMq(c *gin.Context)  {
 		fmt.Println(err)
 		common.SendErrorMsg("没存进去obj!!!",c)
 	}
-	if addZet("ZSET",uid.String(),int32(s)) {
+	s :=time.Now().Add(time.Duration(10000)).Unix()
+	fmt.Println(s)
+	if addZet("ZSET",uid.String(),s) {
 		common.SendErrorMsg("出错了呢~",c)
 	}
 	common.SendResponse(result,c)
@@ -125,7 +126,7 @@ func setObj(key string,obj interface{}) bool {
 /**
 	向有序列表存入
  */
-func addZet(key ,value string ,score int32) bool {
+func addZet(key ,value string ,score int64) bool {
 	result ,err := execRedisCommand("ZADD", key, score,value)
 	if err != nil {
 		fmt.Println(err)
@@ -154,9 +155,6 @@ func getSoredSetByRange(key string,startRange,endRange int ,orderByDesc bool) []
 	}
 	return result
 }
-
-
-
 /**
 	获取分数
  */
