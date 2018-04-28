@@ -30,13 +30,13 @@ func AddRedisMq(c *gin.Context)  {
 	if  err != nil {
 		common.SendErrorMsg("json!!!",c)
 	}
-	uid :=uuid.NamespaceDNS.String()
+	uid,_:= uuid.NewV1()
 	result ,err := RedisConn.Do("SETEX",uid, int(60*60*24*time.Second),string(value))
 	if err != nil {
 		fmt.Println(err)
 		common.SendErrorMsg("没存进去obj!!!",c)
 	}
-	if addZet("ZSET",uid,int32(s)) {
+	if addZet("ZSET",uid.String(),int32(s)) {
 		common.SendErrorMsg("出错了呢~",c)
 	}
 	common.SendResponse(result,c)
