@@ -59,6 +59,8 @@ func initMongo() {
 	MongoDB.SetMode(mgo.Monotonic, true)
 }
 
+
+
 func init() {
 	initMongo()
 	//initDB()

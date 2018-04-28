@@ -17,6 +17,8 @@ type Msg struct {
 	msg string
 }
 
+
+
 func AddRedisMq(c *gin.Context)  {
 	v := c.Query("v")
 	s,_ := strconv.ParseInt(c.Query("s"),10,32)
@@ -29,7 +31,7 @@ func AddRedisMq(c *gin.Context)  {
 		common.SendErrorMsg("json!!!",c)
 	}
 	uid :=uuid.NamespaceDNS.String()
-	result ,err := RedisConn.Do("SETEX",uid, int(60*time.Second),string(value))
+	result ,err := RedisConn.Do("SETEX",uid, int(60*60*24*time.Second),string(value))
 	if err != nil {
 		fmt.Println(err)
 		common.SendErrorMsg("没存进去obj!!!",c)
@@ -66,9 +68,7 @@ func SetRedis(c *gin.Context){
 	缓存String
  */
 func setString(key,value string) bool {
-	RedisConn := model.RedisPool.Get()
-	defer RedisConn.Close()
-	result ,err := RedisConn.Do("SET", key, value)
+	result ,err := execRedisCommand("SET", key, value)
 	if err != nil {
 		fmt.Println(err)
 	}
@@ -78,9 +78,7 @@ func setString(key,value string) bool {
 	缓存String 设置过期时间
  */
 func setStringTime(key,value string, timeOutSeconds int ) bool{
-	RedisConn := model.RedisPool.Get()
-	defer RedisConn.Close()
-	result ,err := RedisConn.Do("SETEX",key, timeOutSeconds, value)
+	result ,err := execRedisCommand("SETEX",key, timeOutSeconds, value)
 	if err != nil {
 		fmt.Println(err)
 	}
@@ -91,9 +89,7 @@ func setStringTime(key,value string, timeOutSeconds int ) bool{
      从缓存中获取String
  */
 func getString(key string) string {
-	RedisConn := model.RedisPool.Get()
-	defer RedisConn.Close()
-	result, err := redis.String(RedisConn.Do("GET", key))
+	result, err := redis.String(execRedisCommand("GET", key))
 	if err != nil {
 		fmt.Println(err)
 	}
@@ -104,9 +100,7 @@ func getString(key string) string {
 	删除
  */
 func remoceString(key string) bool{
-	RedisConn := model.RedisPool.Get()
-	defer RedisConn.Close()
-	result, err := RedisConn.Do("DEL", key)
+	result, err := execRedisCommand("DEL", key)
 	if err != nil {
 		fmt.Println(err)
 	}
@@ -117,13 +111,11 @@ func remoceString(key string) bool{
  	存对象
  */
 func setObj(key string,obj interface{}) bool {
-	RedisConn := model.RedisPool.Get()
-	defer RedisConn.Close()
 	value, err := json.Marshal(obj)
 	if  err != nil {
 		fmt.Println(err)
 	}
-	result ,err := RedisConn.Do("SET", key, value)
+	result ,err := execRedisCommand("SET", key, value)
 	if err != nil {
 		fmt.Println(err)
 	}
@@ -134,9 +126,7 @@ func setObj(key string,obj interface{}) bool {
 	向有序列表存入
  */
 func addZet(key ,value string ,score int32) bool {
-	RedisConn := model.RedisPool.Get()
-	defer RedisConn.Close()
-	result ,err := RedisConn.Do("ZADD", key, score,value)
+	result ,err := execRedisCommand("ZADD", key, score,value)
 	if err != nil {
 		fmt.Println(err)
 	}
@@ -146,9 +136,7 @@ func addZet(key ,value string ,score int32) bool {
 	删除有序列表元素
  */
 func remZet(key string) bool {
-	RedisConn := model.RedisPool.Get()
-	defer RedisConn.Close()
-	result ,err := RedisConn.Do("ZREM", key)
+	result ,err := execRedisCommand("ZREM", key)
 	if err != nil {
 		fmt.Println(err)
 	}
@@ -156,13 +144,11 @@ func remZet(key string) bool {
 }
 
 func getSoredSetByRange(key string,startRange,endRange int ,orderByDesc bool) [] string {
-	RedisConn := model.RedisPool.Get()
-	defer RedisConn.Close()
 	fing := "ZRANGE"
 	if orderByDesc {
 		fing = "ZREVRANGE"
 	}
-	result ,err :=  redis.Strings(RedisConn.Do(fing, key,startRange,endRange))
+	result ,err :=  redis.Strings(execRedisCommand(fing, key,startRange,endRange))
 	if err != nil {
 		fmt.Println(err)
 	}
@@ -175,9 +161,7 @@ func getSoredSetByRange(key string,startRange,endRange int ,orderByDesc bool) []
 	获取分数
  */
 func zetScore(key,value string) int64  {
-	RedisConn := model.RedisPool.Get()
-	defer RedisConn.Close()
-	result ,err :=  redis.Int64(RedisConn.Do("ZSCORE", key,value))
+	result ,err :=  redis.Int64(execRedisCommand("ZSCORE", key,value))
 	if err != nil {
 		fmt.Println(err)
 	}
@@ -188,9 +172,7 @@ func zetScore(key,value string) int64  {
 	获取列表长度
  */
 func countList(key string) int {
-	RedisConn := model.RedisPool.Get()
-	defer RedisConn.Close()
-	result ,err :=  redis.Int(RedisConn.Do("LLEN", key))
+	result ,err :=  redis.Int(execRedisCommand("LLEN", key))
 	if err != nil {
 		fmt.Println(err)
 	}
@@ -213,9 +195,7 @@ func insertList(key string, value... string) bool {
 	获取list
  */
 func rangeList(key string, start,end int) []string {
-	RedisConn := model.RedisPool.Get()
-	defer RedisConn.Close()
-	result ,err := redis.Strings(RedisConn.Do("LRANGE", start,end))
+	result ,err := redis.Strings(execRedisCommand("LRANGE", start,end))
 	if err != nil {
 		fmt.Println(err)
 	}
@@ -225,9 +205,7 @@ func rangeList(key string, start,end int) []string {
  	删除LIST数据
  */
 func remListValue(key,value string ,count int) bool {
-	RedisConn := model.RedisPool.Get()
-	defer RedisConn.Close()
-	result ,err := redis.Int(RedisConn.Do("LREM", key,count,value))
+	result ,err := redis.Int(execRedisCommand("LREM", key,count,value))
 	if err != nil {
 		fmt.Println(err)
 	}
@@ -236,3 +214,9 @@ func remListValue(key,value string ,count int) bool {
 
 
 
+// 执行redis命令, 执行完成后连接自动放回连接池
+func execRedisCommand(command string, args ...interface{}) (interface{}, error) {
+	redis := model.RedisPool.Get()
+	defer redis.Close()
+	return redis.Do(command, args...)
+}
