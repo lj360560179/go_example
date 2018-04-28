@@ -211,9 +211,6 @@ func remListValue(key,value string ,count int) bool {
 	}
 	return result > 0
 }
-
-
-
 // 执行redis命令, 执行完成后连接自动放回连接池
 func execRedisCommand(command string, args ...interface{}) (interface{}, error) {
 	redis := model.RedisPool.Get()

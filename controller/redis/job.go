@@ -4,9 +4,6 @@ package redis
 
 import (
 	"github.com/robfig/cron"
-
-	"fmt"
-
 	"time"
 )
 
@@ -18,11 +15,11 @@ func redisJob()  {
 		zset :=getSoredSetByRange("ZSET",0,10,true)
 		for _, set := range zset {
 			if zetScore("ZSET",set) > time.Now().UnixNano(){
-
+				insertList("LIST",set)
+				remZet(set)
 			}
 		}
 	})
-
 	c.Start()
 }
 func init() {
