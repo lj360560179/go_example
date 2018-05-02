@@ -23,6 +23,9 @@ func redisJob()  {
 
 	c.Start()
 }
+func redisAddToList()  {
+
+}
 func init() {
 	redisJob()
 }
