@@ -1,4 +1,4 @@
-package common
+package redis
 
 import (
 	"github.com/gin-gonic/gin"
@@ -6,7 +6,7 @@ import (
 	"net/http"
 )
 
-func SendErrorMsg(msg string,c *gin.Context){
+func sendErrorMsg(msg string,c *gin.Context){
 	var errNo = model.ErrorCode.ERROR
 	c.JSON(http.StatusOK, gin.H{
 		"error": errNo,
@@ -14,7 +14,7 @@ func SendErrorMsg(msg string,c *gin.Context){
 		"state":false,
 	})
 }
-func SendResponse(data interface{},c *gin.Context){
+func sendResponse(data interface{},c *gin.Context){
 	c.JSON(http.StatusOK, gin.H{
 		"state": true,
 		"data":data,

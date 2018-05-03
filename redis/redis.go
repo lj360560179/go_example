@@ -2,7 +2,6 @@ package redis
 
 import (
 	"github.com/gin-gonic/gin"
-	"go_server/controller/common"
 	"github.com/garyburd/redigo/redis"
 	"fmt"
 	"encoding/json"
@@ -11,36 +10,26 @@ import (
 	"github.com/satori/go.uuid"
 )
 
-type Msg struct {
-	id string
-	msg string
-}
+
 
 
 
 func AddRedisMq(c *gin.Context)  {
 	v := c.Query("v")
-
 	RedisConn := model.RedisPool.Get()
 	defer RedisConn.Close()
-	value, err := json.Marshal( Msg{"uuid", v})
-	fmt.Println(value)
-
-	if  err != nil {
-		common.SendErrorMsg("json!!!",c)
-	}
 	uid,_:= uuid.NewV1()
-	result ,err := RedisConn.Do("SETEX",uid, int(60*60*24*time.Second),string(value))
+	result ,err := RedisConn.Do("SETEX",uid.String(), int(60*60*24*time.Second),v)
 	if err != nil {
 		fmt.Println(err)
-		common.SendErrorMsg("没存进去obj!!!",c)
+		sendErrorMsg("没存进去obj!!!",c)
 	}
 	s :=time.Now().Add(time.Duration(10000)).Unix()
 	fmt.Println(s)
 	if addZet("ZSET",uid.String(),s) {
-		common.SendErrorMsg("出错了呢~",c)
+		sendErrorMsg("出错了呢~",c)
 	}
-	common.SendResponse(result,c)
+	sendResponse(result,c)
 }
 
 func GetZset(c *gin.Context)  {
@@ -49,26 +38,25 @@ func GetZset(c *gin.Context)  {
 	for _, set := range zset {
 		result[set] = zetScore("ZSET",set)
 	}
-	common.SendResponse(result,c)
+	sendResponse(result,c)
 }
 
 func GetRedis(c *gin.Context){
     result := getString(c.Query("key"))
-	common.SendResponse(result,c)
+	sendResponse(result,c)
 	return
 }
 
 func SetRedis(c *gin.Context){
 	k := c.Query("k")
 	v := c.Query("v")
-	common.SendResponse(setStringTime(k,v,10),c)
+	sendResponse(setStringTime(k,v,10),c)
 	return
 }
 
 func GetList(c *gin.Context)  {
-	k := c.Query("k")
-	v := c.Query("v")
-	common.SendResponse(setStringTime(k,v,10),c)
+
+	sendResponse(rangeList("LIST",0,10),c)
 	return
 }
 /**
@@ -199,7 +187,7 @@ func insertList(key string, value... string) bool {
 	获取list
  */
 func rangeList(key string, start,end int) []string {
-	result ,err := redis.Strings(execRedisCommand("LRANGE", start,end))
+	result ,err := redis.Strings(execRedisCommand("LRANGE",key, start,end))
 	if err != nil {
 		fmt.Println(err)
 	}
