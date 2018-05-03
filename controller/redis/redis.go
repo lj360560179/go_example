@@ -65,6 +65,12 @@ func SetRedis(c *gin.Context){
 	return
 }
 
+func GetList(c *gin.Context)  {
+	k := c.Query("k")
+	v := c.Query("v")
+	common.SendResponse(setStringTime(k,v,10),c)
+	return
+}
 /**
 	缓存String
  */
@@ -137,7 +143,7 @@ func addZet(key ,value string ,score int64) bool {
 	删除有序列表元素
  */
 func remZet(key string) bool {
-	result ,err := execRedisCommand("ZREM", key)
+	result ,err := execRedisCommand("ZREM","ZSET", key)
 	if err != nil {
 		fmt.Println(err)
 	}
