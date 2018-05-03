@@ -9,14 +9,14 @@ import (
 )
 
 type Msg struct {
-	id string
-	msg string
+	Id string
+	Msg string
 }
 
 func GetByMo(c *gin.Context){
 	a := model.MongoDB.DB("delay").C("msg")
-	result := Msg{}
-	err := a.Find(bson.M{"id": "msg"}).One(&result)
+	result := [] Msg{}
+	err := a.Find(bson.M{"id": "msg"}).All(&result)
 	if err != nil {
 		log.Fatal(err)
 		sendErrorMsg("mmpp",c)
@@ -26,10 +26,10 @@ func GetByMo(c *gin.Context){
 }
 
 func saveMongo(v string)  {
-	a := model.MongoDB.DB("test").C("people")
-	err:=a.Insert(Msg{
-		id:"msg",
-		msg:v,
+	a := model.MongoDB.DB("delay").C("msg")
+	err:=a.Insert(&Msg{
+		"msg",
+		v,
 	})
 	if err!=nil{
 		fmt.Println(err)
