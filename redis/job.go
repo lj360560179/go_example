@@ -4,9 +4,7 @@ package redis
 
 import (
 	"github.com/robfig/cron"
-	//"time"
 	"time"
-	"fmt"
 	"strings"
 )
 
