@@ -20,18 +20,6 @@ var MongoDB *mgo.Session
 var RedisPool *redis.Pool
 
 
-//func initDB() {
-//	db, err := gorm.Open(config.DBConfig.Dialect, config.DBConfig.URL)
-//	if err != nil {
-//		fmt.Println(err.Error())
-//		os.Exit(-1)
-//	}
-//	db.LogMode(true)
-//	db.DB().SetMaxIdleConns(config.DBConfig.MaxIdleConns)
-//	db.DB().SetMaxOpenConns(config.DBConfig.MaxOpenConns)
-//	DB = db
-//}
-
 func initRedis() {
 	RedisPool = &redis.Pool{
 		MaxIdle:     config.RedisConfig.MaxIdle,
@@ -62,7 +50,5 @@ func initMongo() {
 
 func init() {
 	initMongo()
-	//initDB()
 	initRedis()
-
 }
