@@ -1,5 +1,3 @@
-# go_example
-
 ## go gin redis delay
 
 利用redis的有序队列来模拟延迟队列，时间作为分数存入ZSET中，定时从ZSET中取出分数最低的
