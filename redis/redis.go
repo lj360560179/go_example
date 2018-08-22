@@ -27,7 +27,7 @@ func AddRedisMq(c *gin.Context)  {
 	s :=time.Now().Add(time.Duration(10000)).Unix()
 	fmt.Println(s)
 	if addZet("ZSET",uid.String(),s) {
-		sendErrorMsg("出错了呢~",c)
+		sendErrorMsg("出错了~",c)
 	}
 	sendResponse(result,c)
 }
